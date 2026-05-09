@@ -53,10 +53,15 @@ O jogo irá mostra a tela de game over com a opção de ir  por "menu" ou "conti
 9.  Controles
 
 A - para esquerda
+
 D - para a direta
+
 SPACE - para pular
+
 R- para trocar de modo ( modo tesoura gigante e modo regador)
+
 T - menu
+
 Botão do mouse - para atacar
 
 10. Fluxo do Jogo
@@ -98,8 +103,11 @@ Após a introdução começará a primeira fase, sendo a parte da frente do jard
 13. Funcionalidades Mínimas
 
 -movimentação do player
+
 -base do mapa
+
 -colisão 
+
 -mecânica dos ataques dos nimigos de curto alcance
 
 14.  Melhorias Futuras
