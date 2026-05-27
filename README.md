@@ -117,3 +117,62 @@ Após a introdução começará a primeira fase, sendo a parte da frente do jard
 -design dos mapas
 
 -história 
+
+
+Semana 1: O "Cubo que Anda" (Mecânicas Core)
+Foco: Fazer o jogo ser gostoso de jogar, mesmo que tudo sejam apenas quadrados coloridos.
+
+Protagonista: Movimentação básica (andar, pular ou esquivar) e colisão ajustada.
+
+Inimigos: Um tipo de inimigo básico que te persegue e um projétil simples.
+
+Mapa: Criar o "Greybox" (um mapa feito só de blocos cinzas) para testar o tamanho do pulo/velocidade do personagem.
+
+Semana 2: O Loop de Gameplay (A Estrutura)
+Foco: Fazer o jogo ter começo, meio e fim (mesmo que feio).
+
+Combate/Interação: Sistema de vida, dano e morte (tanto para o player quanto para os inimigos).
+
+O Boss: Programar o comportamento básico do Boss (ele se move? tem fases?).
+
+Transição: Sistema para passar de fase ou mudar de sala.
+
+Meta da semana: Você já consegue "jogar" o game do início ao fim com gráficos temporários.
+
+Semana 3: Identidade Visual (O Look do Jogo)
+Foco: Tirar a "cara de protótipo" e dar personalidade.
+
+Protagonista & Inimigos: Desenho dos sprites principais e a primeira rodada de animações (andar e atacar).
+
+Cenário: Criação do Tileset (as peças que montam o mapa) e definição da paleta de cores.
+
+Integração: Substituir os cubos cinzas da Semana 1 pelas artes novas.
+
+Semana 4: O "Vertical Slice" (A Primeira Fase Pronta)
+Foco: Deixar uma parte do jogo 100% com a cara final.
+
+Design de Fase: Montar o mapa definitivo da primeira fase usando as artes prontas.
+
+Arte do Boss: Desenhar e animar o Boss final.
+
+Narrativa: Desenho e implementação das cutscenes (podem ser estáticas estilo HQ para economizar tempo).
+
+Semana 5: Interface e o "Juice" (Suco e Tempero)
+Foco: O que diferencia um jogo amador de um jogo profissional.
+
+UI/Menus: Tela de Start, tela de Game Over e o HUD (barra de vida na tela).
+
+Áudio: Adicionar efeitos sonoros (tiros, passos, dano) e a trilha sonora.
+
+Juice: Adicionar tremedeira de tela (screen shake), partículas de explosão e efeitos visuais que dão impacto ao combate.
+
+Semana 6: Caça aos Bugs e Polimento
+Foco: Sobrevivência e finalização.
+
+Playtests: Mandar o jogo para 2 ou 3 amigos jogarem e observar onde eles travam ou reclamam.
+
+Balanceamento: Ajustar a dificuldade (mudar vida dos inimigos, dano do Boss).
+
+Correção de Bugs: Resolver os travamentos.
+
+Exportação: Gerar o arquivo final do jogo.
