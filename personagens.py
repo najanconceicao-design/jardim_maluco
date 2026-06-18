@@ -1,4 +1,4 @@
-# personagens.py
+# personagens
 import pygame
 
 class Jardineiro:
@@ -10,30 +10,18 @@ class Jardineiro:
         self.vel = 6
         self.direcao_x = 0
         self.direcao_y = 0
+        
         self.jump_force = -15
         self.gravidade = 0.8
         self.chao = False
         
-    def mover(self, direcao):
-        if direcao == 'a':
-            self.pos_x -= 1
-        elif direcao == 'd':
-            self.pos_x +=1
-        elif direcao == 'w':
-            self.pos_y -=1
-        elif direcao == 's':
-            self.pos_y += 1
-        
-        self.pos_x += self.direcao_x * self.vel
-        self.pos_y += self.direcao_y * self.vel
-        
-        self.pos_x += self.direcao_x * self.vel
-        self.pos_y += self.direcao_y * self.vel
-        self.modo = "regador"
+        # Atributos visuais e de jogo
         self.largura = 45
         self.altura = 75
         self.cor = (255, 255, 255)
+        self.modo = "regador"
         
+        # Vida e status
         self.vida_maxima = 150
         self.vida = self.vida_maxima
         self.vidas = 3
@@ -41,11 +29,47 @@ class Jardineiro:
         self.tempo_invulneravel = 0
         self.pontuacao = 0
 
+    def update(self, keys, screen_width, screen_height, plataformas=[]):
+        self.vel_x = 0
+        
+        # Movimento horizontal
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+            self.vel_x = -self.vel
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            self.vel_x = self.vel
+
+        # Gravidade
+        self.vel_y += self.gravidade
+        self.pos_x += self.vel_x
+        self.pos_y += self.vel_y
+
+        # Invulnerabilidade
+        if self.invulneravel:
+            self.tempo_invulneravel -= 1
+            if self.tempo_invulneravel <= 0:
+                self.invulneravel = False
+
+        # Colisão com plataformas (simplificada)
+        self.chao = False
+        for plat in plataformas:
+            if self.vel_y >= 0:
+                if (self.pos_x + self.largura > plat.x and 
+                    self.pos_x < plat.x + plat.largura):
+                    if (self.pos_y + self.altura >= plat.y and 
+                        self.pos_y + self.altura - self.vel_y < plat.y):
+                        self.pos_y = plat.y - self.altura
+                        self.vel_y = 0
+                        self.chao = True
+
+        # Caiu do mapa
+        if self.pos_y > screen_height + 50:
+            self.tomar_dano(100)
+
     def tomar_dano(self, quantidade):
         if not self.invulneravel:
             self.vida -= quantidade
             self.invulneravel = True
-            self.tempo_invulneravel = 45 
+            self.tempo_invulneravel = 45
             
             if self.vida <= 0:
                 self.morrer()
@@ -56,38 +80,10 @@ class Jardineiro:
             self.vida = self.vida_maxima
             self.pos_x = 100
             self.pos_y = 300
-            print(f"💀 Você virou adubo!: {self.vidas}")
+            print(f"💀 Você virou adubo! Vidas restantes: {self.vidas}")
         else:
-            print("💀 Hojé as plantas estão bem alimentadas")
+            print("💀 Hoje as plantas estão bem alimentadas...")
 
-    def update(self, keys, screen_width, screen_height, plataformas=[]):
-        self.vel_x = 0
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            self.vel_x = -self.vel
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            self.vel_x = self.vel
-
-        self.vel_y += self.gravidade
-        self.pos_x += self.vel_x
-        self.pos_y += self.vel_y
-
-        if self.invulneravel:
-            self.tempo_invulneravel -= 1
-            if self.tempo_invulneravel <= 0:
-                self.invulneravel = False
-
-        self.chao = False
-        for plat in plataformas:
-            if self.vel_y >= 0:
-                if (self.pos_x + self.largura > plat.x and self.pos_x < plat.x + plat.largura):
-                    if (self.pos_y + self.altura >= plat.y and 
-                        self.pos_y + self.altura - self.vel_y < plat.y):
-                        self.pos_y = plat.y - self.altura
-                        self.vel_y = 0
-                        self.no_chao = True
-
-        if self.pos_y > screen_height + 50:
-            self.tomar_dano(100)  # Caiu do mapa = morte
 
 class Projetil:
     def __init__(self, x, y, direcao):
@@ -105,11 +101,11 @@ class Projetil:
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.cor, (int(self.x), int(self.y)), 8)
-        
-        pygame.draw.circle(screen, (255, 255, 255), (int(self.x)-3, int(self.y)-3), 4)
+        pygame.draw.circle(screen, (255, 255, 255), (int(self.x) - 3, int(self.y) - 3), 4)
 
     def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.largura, self.altura) 
+        return pygame.Rect(self.x, self.y, self.largura, self.altura)
+
 
 class planta_longa:
     def __init__(self, x, y):
@@ -117,41 +113,36 @@ class planta_longa:
         self.y = y
         self.largura = 60
         self.altura = 65
-        
         self.vida = 60
         self.vida_max = 60
-        
         self.alcance_ataque = 275
         self.cooldown_ataque = 0
         self.cooldown_max = 105
-        
-        self.projetils = []         
-        self.estado = "idle" 
-        
-    def update(self, Jardineiro, pos_x, pos_y):
+        self.projetils = []
+        self.estado = "idle"
+
+    def update(self, jardineiro, plataformas=[]):
         if self.cooldown_ataque > 0:
             self.cooldown_ataque -= 1
-        distancia = abs(Jardineiro.pos_x - self.x)
-        Jardineiro_a_esquerda = Jardineiro.pos_y > self.x
+
+        distancia = abs(jardineiro.pos_x - self.x)
+
         if distancia < self.alcance_ataque and self.cooldown_ataque == 0:
-            self.atacar(Jardineiro_a_esquerda)
+            self.atacar(jardineiro.pos_x > self.x)
             self.cooldown_ataque = self.cooldown_max
-            
-            for proj in self.projetils[:]:
-                proj.update()
-            
+
+        # Atualiza projéteis
+        for proj in self.projetils[:]:
+            proj.update()
             if proj.x < -50 or proj.x > 1200:
                 self.projetils.remove(proj)
 
-    def atacar(self, para_esquerda):
+    def atacar(self, para_direita):
         self.estado = "atacando"
-        
-        boca_x = self.x + 35 if para_esquerda else self.x + 15
-        boca_y = self.y + 25
-        
-        direcao = 1 if para_esquerda else -1
-        novo_projetil = Projetil(boca_x, boca_y, direcao)
-        self.projetils.append(novo_projetil)
+        boca_x = self.x + 50 if para_direita else self.x + 10
+        boca_y = self.y + 30
+        direcao = 1 if para_direita else -1
+        self.projetils.append(Projetil(boca_x, boca_y, direcao))
 
     def tomar_dano(self, quantidade):
         self.vida -= quantidade
@@ -161,40 +152,35 @@ class planta_longa:
     def morrer(self):
         print("🌿 Erva daninha podada!")
 
+
 class planta_corpo_a_corpo:
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.largura = 60
         self.altura = 65
-    
-        self.vida = 90          
+        self.vida = 90
         self.vida_max = 90
-    
-        self.alcance_ataque = 85   
+        self.alcance_ataque = 85
         self.cooldown_ataque = 0
         self.cooldown_max = 55
-    
         self.estado = "idle"
-        self.dano = 20            
-        
-    def update(self, Jardineiro, plataformas=[]):
+        self.dano = 20
+
+    def update(self, jardineiro, plataformas=[]):
         if self.cooldown_ataque > 0:
             self.cooldown_ataque -= 1
-    
-        distancia = abs(Jardineiro.pos_x - self.x)
-        
+
+        distancia = abs(jardineiro.pos_x - self.x)
+
         if distancia < self.alcance_ataque and self.cooldown_ataque == 0:
-            self.atacar(Jardineiro)
+            self.atacar(jardineiro)
             self.cooldown_ataque = self.cooldown_max
 
-    def atacar(self, Jardineiro):
+    def atacar(self, jardineiro):
         self.estado = "atacando"
-
-        if hasattr(Jardineiro, 'tomar_dano'):
-            Jardineiro.tomar_dano(self.dano)
-            
-        self.direcao_ataque = 1 if Jardineiro.pos_x > self.x else -1
+        if hasattr(jardineiro, 'tomar_dano'):
+            jardineiro.tomar_dano(self.dano)
 
     def tomar_dano(self, quantidade):
         self.vida -= quantidade
