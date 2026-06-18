@@ -76,11 +76,11 @@ while rodando:
                     print("<<< Voltando ao menu")
                 else:
                     rodando = False 
-
-tela.fill(PRETO)
-
-if estado_atual == "menu":
-    titulo = fonte_titulo.render("MEU JOGO", True, BRANCO)
+    
+    tela.fill(PRETO)
+    
+    if estado_atual == "menu":
+        titulo = fonte_titulo.render("MEU JOGO", True, BRANCO)
     titulo_rect = titulo.get_rect(center=(LARGURA//2, 120))
     tela.blit(titulo, titulo_rect)
     
@@ -101,5 +101,3 @@ if estado_atual == "menu":
 
 pygame.quit()
 sys.exit()
-
-# infelizmente há um problema que o menu so aparece quando tu sai do jogo e eu so vou resolver quando eu quiser
