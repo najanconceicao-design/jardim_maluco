@@ -14,6 +14,17 @@ class Jardineiro:
         self.jump_force = -15
         self.gravidade = 0.8
         self.chao = False
+
+    def mover(self, direcao):
+        if direcao == 'a':
+            self.pos_x -= 1
+        elif direcao == 'd':
+            self.pos_x +=1
+        elif direcao == 'w':
+            self.pos_y -=1
+        elif direcao == 's':
+            self.pos_y += 1
+    
         
         # Atributos visuais e de jogo
         self.largura = 45
