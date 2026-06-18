@@ -160,3 +160,46 @@ class planta_longa:
 
     def morrer(self):
         print("🌿 Erva daninha podada!")
+
+class planta_corpo_a_corpo:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.largura = 60
+        self.altura = 65
+    
+        self.vida = 90          
+        self.vida_max = 90
+    
+        self.alcance_ataque = 85   
+        self.cooldown_ataque = 0
+        self.cooldown_max = 55
+    
+        self.estado = "idle"
+        self.dano = 20            
+        
+    def update(self, Jardineiro, plataformas=[]):
+        if self.cooldown_ataque > 0:
+            self.cooldown_ataque -= 1
+    
+        distancia = abs(Jardineiro.pos_x - self.x)
+        
+        if distancia < self.alcance_ataque and self.cooldown_ataque == 0:
+            self.atacar(Jardineiro)
+            self.cooldown_ataque = self.cooldown_max
+
+    def atacar(self, Jardineiro):
+        self.estado = "atacando"
+
+        if hasattr(Jardineiro, 'tomar_dano'):
+            Jardineiro.tomar_dano(self.dano)
+            
+        self.direcao_ataque = 1 if Jardineiro.pos_x > self.x else -1
+
+    def tomar_dano(self, quantidade):
+        self.vida -= quantidade
+        if self.vida <= 0:
+            self.morrer()
+
+    def morrer(self):
+        print("🌿 Erva daninha podada!")
