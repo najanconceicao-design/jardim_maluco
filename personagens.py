@@ -94,7 +94,9 @@ class Jardineiro:
             print(f"💀 Você virou adubo! Vidas restantes: {self.vidas}")
         else:
             print("💀 Hoje as plantas estão bem alimentadas...")
-
+    
+    def desenhar(self, tela):
+        pygame.draw.circle(tela,(255,255,0),(self.pos_x,self.pos_y),20)
 
 class Projetil:
     def __init__(self, x, y, direcao):
@@ -109,14 +111,6 @@ class Projetil:
 
     def update(self):
         self.x += self.velocidade * self.direcao
-
-    def draw(self, screen):
-        pygame.draw.circle(screen, self.cor, (int(self.x), int(self.y)), 8)
-        pygame.draw.circle(screen, (255, 255, 255), (int(self.x) - 3, int(self.y) - 3), 4)
-
-    def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.largura, self.altura)
-
 
 class planta_longa:
     def __init__(self, x, y):
