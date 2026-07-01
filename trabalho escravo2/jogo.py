@@ -12,7 +12,7 @@ class Jogo:
         self.rodando = True 
         self.clock=pygame.time.Clock()
         self.jardineiro = Jardineiro(200,200)
-    
+
     def verificar_eventos(self):
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -30,8 +30,18 @@ class Jogo:
         if tecla[pygame.K_DOWN]:
             self.jardineiro.mover('w')
     
+    def desenhar(self):
+        self.tela.fill((30, 30, 30))
+        self.jardineiro.desenhar(self.tela)
+        pygame.display.update()
+
     def iniciar(self):
         while self.rodando:
             self.verificar_eventos()
             self.desenhar()
             self.clock.tick(60)
+
+# Para testar o jogo
+if __name__ == "__main__":
+    jogo = Jogo()
+    jogo.iniciar()
