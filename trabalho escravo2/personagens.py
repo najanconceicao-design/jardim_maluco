@@ -1,5 +1,6 @@
 # personagens
 import pygame
+from plataforma import Plataforma
 
 class Jardineiro:
     def __init__(self, x, y):
@@ -33,53 +34,54 @@ class Jardineiro:
             self.pos_x -= 1
         elif direcao == 'd':
             self.pos_x +=1
-        elif direcao == 's':
-            self.pos_y -=1
         elif direcao == 'w':
-            self.pos_y += 1
+            self.pos_y -=1
 
     def update(self, keys, screen_width, screen_height, plataformas=None):
         if plataformas is None:
             plataformas = []
-                 
-        # Movimento horizontal
+
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.vel_x = -self.vel
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.vel_x = self.vel
+        else:
+            self.vel_x = 0   
+        
+        if (keys[pygame.K_w] or keys[pygame.K_SPACE] or keys[pygame.K_UP]) and self.chao:
+            self.vel_y = self.jump_force   # (normalmente é negativo: -self.jump_force)
+            self.chao = False
 
-        # Gravidade
         self.vel_y += self.gravidade
         self.pos_x += self.vel_x
         self.pos_y += self.vel_y
 
-        # Invulnerabilidade
         if self.invulneravel:
             self.tempo_invulneravel -= 1
-            if self.tempo_invulneravel <= 0:
-                self.invulneravel = False
+        if self.tempo_invulneravel <= 0:
+            self.invulneravel = False
 
-        # Colisão com plataformas (simplificada)
         self.chao = False
         for plat in plataformas:
             if self.vel_y >= 0:
-                if (self.pos_x + self.largura > plat.x and
-                    self.pos_x < plat.x + plat.largura and
-                    self.pos_y + self.altura >= plat.y and
-                    self.pos_y + self.altura - self.vel_y < plat.y):
+                bottom = self.pos_y + self.altura
+                prev_bottom = bottom - self.vel_y
 
-                    self.pos_y = plat.y - self.altura
-                    self.vel_y = 0
-                    self.chao = True
-                    break
-        
-        # Limites da tela
+            if (self.pos_x + self.largura > plat.x and
+                self.pos_x < plat.x + plat.largura and
+                bottom >= plat.y and
+                prev_bottom <= plat.y):
+
+                self.pos_y = plat.y - self.altura
+                self.vel_y = 0
+                self.chao = True
+                break   
+
         if self.pos_x < 0:
             self.pos_x = 0
         if self.pos_x + self.largura > screen_width:
             self.pos_x = screen_width - self.largura
 
-        # Caiu do mapa
         if self.pos_y > screen_height + 100:
             self.tomar_dano(999)
     
