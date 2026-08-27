@@ -181,5 +181,7 @@ Semana 6: Caça aos Bugs e Polimento
 
 
 cd C:\Users\20251101110061\Downloads\joguinho
-py maingame.py            
+py maingame.py 
+
+
 codigo para rodar
