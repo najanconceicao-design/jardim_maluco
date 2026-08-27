@@ -178,3 +178,8 @@ Semana 6: Caça aos Bugs e Polimento
       Correção de Bugs: Resolver os travamentos.
       
       Exportação: Gerar o arquivo final do jogo.
+
+
+cd C:\Users\20251101110061\Downloads\joguinho
+py maingame.py            
+codigo para rodar
